@@ -25,12 +25,10 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
-    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.BIND_INCALL_SERVICE" />
+
+    <uses-sdk
+        android:minSdkVersion="31"
+        android:targetSdkVersion="31"/>
 
     <application
         android:label="@string/glyph_settings_app_name"
@@ -47,81 +45,35 @@
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Schedule Receiver -->
-        <receiver
-            android:name=".Manager.GlyphScheduleManager$ScheduleReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="co.aospa.glyph.ACTION_SCHEDULE_START" />
-                <action android:name="co.aospa.glyph.ACTION_SCHEDULE_END" />
-            </intent-filter>
         </receiver>
 
         <service
-            android:name=".Services.AutoBrightnessService">
+            android:name=".services.CallReceiverService"
+            android:permission="android.permission.READ_PHONE_STATE">
         </service>
 
         <service
-            android:name=".Services.CallReceiverService"
-            android:permission="android.permission.BIND_INCALL_SERVICE"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.telecom.InCallService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.telecom.INCLUDE_SELF_MANAGED_CALLS"
-                android:value="true" />
+            android:name=".services.ChargingService">
         </service>
 
         <service
-            android:name=".Services.ChargingService">
+            android:name=".services.PowershareService">
         </service>
 
         <service
-            android:name=".Services.BatterySaverService">
+            android:name=".services.FlipToGlyphService">
         </service>
 
         <service
-            android:name=".Services.PowershareService">
+            android:name=".services.MusicVisualizerService">
         </service>
 
         <service
-            android:name=".Services.FlipToGlyphService">
+            android:name=".services.VolumeLevelService">
         </service>
 
         <service
-            android:name=".Services.MusicVisualizerService">
-        </service>
-
-        <service
-            android:name=".Services.VolumeLevelService">
-        </service>
-
-        <service
-            android:name=".Services.ProgressService">
-        </service>
-
-        <service
-            android:name=".Services.ToneHelperService">
-        </service>
-
-        <service
-            android:name=".Services.MicActivityService"
-            android:permission="android.permission.MODIFY_AUDIO_ROUTING">
-        </service>
-
-        <service
-            android:name=".Services.TorchService">
-        </service>
-
-        <service
-            android:name=".Services.NotificationService"
+            android:name=".services.NotificationService"
             android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -130,7 +82,7 @@
         </service>
 
         <service
-            android:name=".Tiles.GlyphTileService"
+            android:name=".tiles.GlyphTileService"
             android:exported="true"
             android:label="@string/glyph_accessibility_quick_settings"
             android:icon="@drawable/ic_glyphs_logo"
@@ -138,11 +90,9 @@
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE"
-                android:value="true"/>
         </service>
         <service
-            android:name=".Tiles.TorchTileService"
+            android:name=".tiles.TorchTileService"
             android:exported="true"
             android:label="@string/glyph_accessibility_quick_settings_torch"
             android:icon="@drawable/qs_glyphs_torch_icon"
@@ -150,102 +100,117 @@
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE"
-                android:value="true"/>
         </service>
         <service
-            android:name=".Tiles.FlipToGlyphTileService"
-            android:exported="true"
-            android:label="@string/glyph_accessibility_quick_settings_flip_to_glyph"
-            android:icon="@drawable/ic_flip"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            android:name=".services.ThirdPartyService"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE"
-                android:value="true"/>
-        </service>
-        <service
-            android:name=".Tiles.MusicVisualizerTileService"
-            android:exported="true"
-            android:label="@string/glyph_accessibility_quick_settings_music_visualizer"
-            android:icon="@drawable/ic_music_visualizer"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE"
-                android:value="true"/>
-        </service>
-        <service
-            android:name=".Services.ThirdPartyService"
-            android:exported="true"
-            android:permission="android.permission.BIND_SERVICE">
-            <intent-filter>
-                <action android:name="co.aospa.glyph.Services.ThirdPartyService" />
+                <action android:name="co.aospa.glyph.services.ThirdPartyService" />
             </intent-filter>
         </service>
+        <activity
+            android:name=".tiles.TileActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SubSettingsBase">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
+        </activity>
 
         <activity
-            android:name=".Settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true"
             android:label="@string/glyph_settings_title"
-            android:theme="@style/Theme.SubSettingsBase.Expressive">
+            android:theme="@style/Theme.SubSettingsBase">
             <intent-filter>
                 <action android:name="com.android.settings.action.IA_SETTINGS" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
             <meta-data
                 android:name="com.android.settings.category"
                 android:value="com.android.settings.category.ia.homepage" />
-            <meta-data
-                android:name="com.android.settings.group_key"
-                android:value="top_level_personalize_category"/>
             <meta-data
                 android:name="com.android.settings.icon"
                 android:resource="@drawable/ic_glyphs_logo" />
             <meta-data
                 android:name="com.android.settings.summary"
                 android:value="@string/glyph_settings_summary" />
-             <meta-data
+            <meta-data
                 android:name="com.android.settings.order"
-                android:value="-256" />
+                android:value="-115" />
+            <meta-data
+                android:name="com.android.settings.group_key"
+                android:value="top_level_personalize_category" />
+            <meta-data
+                android:name="com.android.settings.icon_color_scheme"
+                android:value="blue" />
         </activity>
 
         <activity
-            android:name=".Settings.SubSettingsActivity"
+            android:name=".settings.CallSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
-            android:theme="@style/Theme.SubSettingsBase.Expressive" />
-
-        <activity
-            android:name=".Settings.AnimationSettingsActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="false"
-            android:theme="@style/Theme.SubSettingsBase.Expressive">
+            android:theme="@style/Theme.SubSettingsBase">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".Settings.ScheduleSettingsActivity"
+            android:name=".settings.ChargingLevelSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
-            android:theme="@style/Theme.SubSettingsBase.Expressive">
+            android:theme="@style/Theme.SubSettingsBase">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        
+
         <activity
-            android:name=".Settings.ScheduleSettingsActivity"
+            android:name=".settings.PowershareSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
-            android:theme="@style/Theme.SubSettingsBase.Expressive">
+            android:theme="@style/Theme.SubSettingsBase">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".settings.VolumeLevelSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.SubSettingsBase">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".settings.MusicVisualizerSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.SubSettingsBase">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".settings.FlipSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.SubSettingsBase">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".settings.NotifsSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.SubSettingsBase">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

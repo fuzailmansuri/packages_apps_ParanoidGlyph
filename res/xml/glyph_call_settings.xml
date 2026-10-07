@@ -18,7 +18,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/glyph_settings_call_toggle_title">
 
-    <co.aospa.glyph.Preference.GlyphAnimationPreference
+    <co.aospa.glyph.preference.GlyphAnimationPreference
         android:key="glyph_settings_call_sub_preview"
         android:selectable="false" />
 
@@ -26,52 +26,12 @@
         android:key="glyph_settings_call_sub_toggle"
         android:title="@string/glyph_settings_call_sub_toggle_title" />
 
-
-<!---    <SwitchPreferenceCompat
-        android:key="glyph_settings_call_ogg_sync_toggle"
-        android:icon="@drawable/ic_sync"
-        android:title="@string/glyph_settings_call_ogg_sync_toggle_title"
-        android:defaultValue="false"
-        android:summary="@string/glyph_settings_call_ogg_sync_toggle_summary" />
- -->
-
         <ListPreference
+            android:dependency="glyph_settings_call_sub_toggle"
             android:key="glyph_settings_call_sub_animations"
-            android:icon="@drawable/ic_animation"
             android:title="@string/glyph_settings_call_sub_animations_title"
             android:defaultValue="@string/glyph_settings_call_animations_default"
             android:layout="@layout/preference"
             android:summary="%s" />
-
-        <Preference
-            android:key="glyph_settings_call_sub_animations_live_preview"
-            android:icon="@drawable/ic_live"
-            android:title="@string/glyph_settings_animations_live_preview_title"
-            android:summary="@string/glyph_settings_animations_live_preview_summary" />
-
-        <SwitchPreferenceCompat
-            android:key="glyph_settings_call_sub_animations_reverse_toggle"
-            android:icon="@drawable/ic_rewind"
-            android:title="@string/glyph_settings_sub_animations_reverse_toggle_title"
-            android:defaultValue="false"
-            android:summary="@string/glyph_settings_sub_animations_reverse_toggle_summary" />
-
-        <com.android.settingslib.widget.FooterPreference
-            android:key="glyph_call_csv_hint"
-            android:title="@string/glyph_settings_call_additional_hint"
-            android:selectable="false" />
-
-    <PreferenceCategory>
-        <Preference
-            android:key="glyph_settings_call_sub_contact_select"
-            android:icon="@drawable/ic_account_box"
-            android:title="@string/glyph_settings_call_sub_contact_select_title"
-            android:summary="@string/glyph_settings_call_sub_contact_select_summary" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="glyph_settings_call_sub"
-        android:title="@string/glyph_settings_call_sub_title" />
-
 
 </PreferenceScreen>
